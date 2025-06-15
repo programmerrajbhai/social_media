@@ -14,7 +14,7 @@ class SocialHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xFF1B1B3C),
         title: const Text(
-          'INJOY',
+          'Social Media',
           style: TextStyle(
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.bold,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:social_mediaa/createpost/view/screens/create_post.dart';
+import 'package:social_mediaa/message/view/screens/message_screens.dart';
+import 'package:social_mediaa/notification/view/screens/notification_screens.dart';
 import 'package:social_mediaa/profile/view/screens/profilescreens.dart';
-
 import '../../../home/view/screens/home_screens.dart';
 import '../../controller/bottom_nav_controller.dart';
 
@@ -20,9 +22,9 @@ class BaseScreens extends StatelessWidget {
           index: bottomNavController.currentIndex.value,
           children: const [
             SocialHomePage(),
-            ChatScreen(),
-            AddScreen(),
-            NotifyScreen(),
+            MessagesPage(),
+            CreatePost(),
+            NotificationPage(),
             ProfilePage(),
           ],
         );
@@ -60,16 +62,6 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 }
 
-
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Chat Screen', style: TextStyle(fontSize: 24)),
-    );
-  }
-}
 
 class AddScreen extends StatelessWidget {
   const AddScreen({super.key});
