@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_mediaa/basescreen/view/screens/base_screens.dart';
+import 'package:social_mediaa/login_reg_screens/screens/reg_screen.dart';
 import 'basescreen/controller/bottom_nav_controller.dart';
 import 'home/view/screens/home_screens.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const BaseScreens(),
+      home: const RegistrationScreens(),
     );
   }
 }

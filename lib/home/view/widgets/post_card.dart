@@ -1,18 +1,23 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart'; // Get ইম্পোর্ট
 import '../../controller/post_controller.dart';
 import '../../model/post_model.dart';
+import '../screens/post_details_screens.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
   final int index;
   final PostController controller;
+  final bool isDetailPage; // এই ফ্ল্যাগটি ডিটেইল পেইজ থেকে নেভিগেশন বন্ধ রাখবে
 
   const PostCard({
     super.key,
     required this.post,
     required this.index,
     required this.controller,
+    this.isDetailPage = false, // ডিফল্ট মান false
   });
 
   @override
@@ -34,12 +39,12 @@ class PostCard extends StatelessWidget {
                 backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=6'),
               ),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Blenderr Art', style: TextStyle(color: Colors.white)),
-                    Text('8h', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                    Text(post.title, style: const TextStyle(color: Colors.white)), // 'Blenderr Art' এর বদলে post.title
+                    const Text('8h', style: TextStyle(color: Colors.white54, fontSize: 12)),
                   ],
                 ),
               ),
@@ -69,22 +74,28 @@ class PostCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           // Actions
-          Row(
+          // Obx দিয়ে র‍্যাপ করা হলো যেন লাইক/কমেন্ট কাউন্ট রিয়েল-টাইমে আপডেট হয়
+          Obx(() => Row(
             children: [
               IconButton(
                 icon: Icon(
-                  post.isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: post.isLiked ? Colors.red : Colors.white70,
+                  post.isLiked.value ? Icons.favorite : Icons.favorite_border,
+                  color: post.isLiked.value ? Colors.red : Colors.white70,
                 ),
                 onPressed: () => controller.toggleLike(index),
               ),
-              Text('${post.likes}', style: const TextStyle(color: Colors.white)),
+              Text('${post.likes.value}', style: const TextStyle(color: Colors.white)),
               const SizedBox(width: 16),
               IconButton(
                 icon: const Icon(Icons.comment_outlined, color: Colors.white70),
-                onPressed: () {},
+                onPressed: isDetailPage
+                    ? null // ডিটেইল পেইজে থাকলে বাটন কাজ করবে না
+                    : () => Get.to( // কমেন্ট বাটনে ক্লিক করলে নতুন পেইজে যাবে
+                      () => PostDetailPage(postIndex: index),
+                  transition: Transition.downToUp,
+                ),
               ),
-              Text('${post.comments}', style: const TextStyle(color: Colors.white)),
+              Text('${post.commentCount.value}', style: const TextStyle(color: Colors.white)),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.send_outlined, color: Colors.white70),
@@ -96,7 +107,7 @@ class PostCard extends StatelessWidget {
                 },
               ),
             ],
-          )
+          ))
         ],
       ),
     );

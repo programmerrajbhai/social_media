@@ -4,7 +4,11 @@ import 'package:get/get.dart';
 import 'package:social_mediaa/createpost/controller/create_post_controller.dart';
 
 class CreatePost extends StatelessWidget {
-  const CreatePost({super.key});
+   CreatePost({super.key});
+
+
+ final CreatePostController controllers = Get.put(CreatePostController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +29,14 @@ class CreatePost extends StatelessWidget {
           TextButton(
             onPressed: () {
               // Submit/post logic here
+              controllers.uploadToServer();
             },
-            child: const Text('Post', style: TextStyle(color: Colors.blueAccent)),
+            child:  Text('Post', style: TextStyle(color: Colors.blueAccent)),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             // Profile & Input
@@ -50,6 +55,7 @@ class CreatePost extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: TextField(
+                    controller: controllers.titleController,
                     maxLines: null,
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(

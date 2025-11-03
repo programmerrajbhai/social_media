@@ -20,12 +20,12 @@ class BaseScreens extends StatelessWidget {
       body: Obx(() {
         return IndexedStack(
           index: bottomNavController.currentIndex.value,
-          children: const [
-            SocialHomePage(),
-            MessagesPage(),
+          children: [
+            const SocialHomePage(),
+            const MessagesPage(),
             CreatePost(),
-            NotificationPage(),
-            ProfilePage(),
+            const NotificationPage(),
+            const ProfilePage(),
           ],
         );
       }),

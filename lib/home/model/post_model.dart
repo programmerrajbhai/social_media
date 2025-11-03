@@ -1,25 +1,28 @@
+
+import 'package:get/get.dart';
+
+import 'comment_model.dart'; // নতুন কমেন্ট মডেল ইম্পোর্ট
+
 class Post {
   final String title;
   final String image;
-  int likes;
-  bool isLiked;
-  final int comments;
+
+  // ভ্যারিয়েবলগুলোকে রি-অ্যাকটিভ করা হলো
+  final RxInt likes;
+  final RxBool isLiked;
+  final RxInt commentCount;
+  final RxList<Comment> commentList; // কমেন্টের লিস্ট
 
   Post({
     required this.title,
     required this.image,
-    required this.likes,
-    required this.isLiked,
-    required this.comments,
-  });
-
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      title: json['title'],
-      image: json['image'],
-      likes: json['likes'],
-      isLiked: json['isLiked'],
-      comments: json['comments'],
-    );
-  }
+    required int initialLikes,
+    required bool initialIsLiked,
+    required int initialComments,
+    required List<Comment> initialCommentList,
+  }) :
+        likes = initialLikes.obs,
+        isLiked = initialIsLiked.obs,
+        commentCount = initialComments.obs,
+        commentList = initialCommentList.obs;
 }
