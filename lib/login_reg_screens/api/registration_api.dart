@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../model/registration_model.dart';
 
 class RegistrationApi {
-  static const String url = "http://10.0.2.2/flutter_api/save_user.php";
+  static const String url = "http://localhost/api/register.php";
 
   static Future<Map<String, dynamic>> addUser(RegistrationModel user) async {
     try {
