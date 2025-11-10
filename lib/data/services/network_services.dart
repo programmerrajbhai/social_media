@@ -31,8 +31,6 @@ class NetworkClient {
         responseBody: response.body,
       );
 
-
-
       if (response.statusCode == 200) {
         final decodedJson = jsonDecode(response.body);
         return NetworkResponse(
@@ -62,15 +60,18 @@ class NetworkClient {
     Map<String, dynamic>? body,
   }) async {
     try {
-      Uri uri = Uri.parse(url);
 
-      _preRequestLog(url, body:body);
+
+      Uri uri = Uri.parse(url);
+      _preRequestLog(url, body: body);
+
 
       Response response = await post(
         uri,
         headers: {'Content-type': 'Application/json'},
         body: jsonEncode(body),
       );
+
 
       _postRequestLog(
         url,
@@ -95,8 +96,7 @@ class NetworkClient {
         );
       }
     } catch (e) {
-
-     _postRequestLog(url, -1,errorMessage: e.toString());
+      _postRequestLog(url, -1, errorMessage: e.toString());
 
       return NetworkResponse(
         isSuccess: false,
@@ -106,15 +106,13 @@ class NetworkClient {
     }
   }
 
-
-
-
   static void _preRequestLog(String url, {Map<String, dynamic>? body}) {
     _logger.i(
       'url=> $url\n'
       'body=> ${body}',
     );
   }
+
   static void _postRequestLog(
     String url,
     int statusCode, {
@@ -126,7 +124,7 @@ class NetworkClient {
       _logger.e(
         'URL=> $url\n'
         'Status Code=> $statusCode'
-        'ErrorMessage=> $errorMessage'
+        'ErrorMessage=> $errorMessage',
       );
     } else {
       _logger.i(
@@ -138,3 +136,40 @@ class NetworkClient {
     }
   }
 }
+
+
+//=======================
+
+// class NetworkClient {
+//   static Future<NetworkResponse> getReques({required String url}) async {
+//
+//     try {
+//       Uri uri = Uri.parse(url);
+//       Response response = await get(uri);
+//
+//
+//       if (response.statusCode == 200) {
+//         final decodedJSON = jsonDecode(response.body);
+//         return NetworkResponse(
+//           isSuccess: true,
+//           data: decodedJSON,
+//           statusCode: response.statusCode,
+//         );
+//       } else {
+//         return NetworkResponse(
+//             isSuccess: false,
+//             errorMessage: 'Something went wrong',
+//             statusCode: response.statusCode
+//         );
+//       }
+//     }catch(e){
+//       return NetworkResponse(
+//           isSuccess: false,
+//           errorMessage: e.toString(),
+//           statusCode: -1,
+//       );
+//     }
+//
+//
+//   }
+// }

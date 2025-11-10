@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:social_mediaa/login_reg_screens/controllers/resgitration_controller.dart';
+import 'package:social_mediaa/data/services/network_services.dart';
+import '../../data/utils/Urls.dart';
 import '../widgets/Textfromfield.dart';
 import '../widgets/containnerBox.dart';
 
@@ -13,21 +14,10 @@ class RegistrationScreens extends StatefulWidget {
 }
 
 class _RegistrationScreensState extends State<RegistrationScreens> {
-
-
-  late final Registration_Controller reg_controller = Registration_Controller();
-
-  @override
-  void dispose() {
-    // ✅ সব controller dispose করা
-    reg_controller.firstname_controller.dispose();
-    reg_controller.lastname_controller.dispose();
-    reg_controller.email_controller.dispose();
-    reg_controller.password_controller.dispose();
-
-    super.dispose();
-  }
-
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _fullnameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +30,37 @@ class _RegistrationScreensState extends State<RegistrationScreens> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              SizedBox(height: 400,),
+              SizedBox(height: 400),
               textfromfield(
-                  controller: reg_controller.firstname_controller,
-                  icon: Icons.account_box, text: 'First Name'),
+                controller: _usernameController,
+                icon: Icons.account_box,
+                text: 'username',
+              ),
               SizedBox(height: 8),
               textfromfield(
-                controller: reg_controller.lastname_controller,
-                  icon: Icons.account_box, text: 'Last Name'),
+                controller: _fullnameController,
+                icon: Icons.account_box,
+                text: 'full name',
+              ),
               SizedBox(height: 8),
               textfromfield(
-                  controller:reg_controller.email_controller,
-                  icon: Icons.email, text: 'Email Address'),
+                controller: _emailController,
+                icon: Icons.email,
+                text: 'email address',
+              ),
               SizedBox(height: 8),
               textfromfield(
-                controller: reg_controller.password_controller,
-                  obscureText: true,
-                  icon: Icons.lock, text: 'Password'),
+                controller: _passwordController,
+                obscureText: true,
+                icon: Icons.lock,
+                text: 'Password',
+              ),
               SizedBox(height: 8),
 
               SizedBox(height: 16),
               InkWell(
-                onTap: (){
-                 reg_controller.SubmitRegistration(context);
+                onTap: () {
+                  _onTapRegisterButton();
                 },
                 child: containnerBox(
                   bgColors: Colors.black,
@@ -73,14 +70,14 @@ class _RegistrationScreensState extends State<RegistrationScreens> {
               ),
               SizedBox(height: 14),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 10.0,
+                ),
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.grey[400],
-                      ),
+                      child: Divider(thickness: 1, color: Colors.grey[400]),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -90,10 +87,7 @@ class _RegistrationScreensState extends State<RegistrationScreens> {
                       ),
                     ),
                     Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.grey[400],
-                      ),
+                      child: Divider(thickness: 1, color: Colors.grey[400]),
                     ),
                   ],
                 ),
@@ -134,5 +128,27 @@ class _RegistrationScreensState extends State<RegistrationScreens> {
         ),
       ),
     );
+  }
+
+  void _onTapRegisterButton() async {
+    Map<String, dynamic> requestBody = {
+      "username": _usernameController.text.trim(),
+      "email": _emailController.text.trim(),
+      "password": _passwordController.text.trim(),
+      "full_name": _fullnameController.text.trim(),
+    };
+    NetworkResponse responseNetwork = await NetworkClient.postRequest(
+      url: Urls.registerUrl,
+      body: requestBody,
+    );
+
+    if(responseNetwork.isSuccess){
+
+      print('Successss');
+    }else{
+      print('errorrr');
+
+    }
+
   }
 }
