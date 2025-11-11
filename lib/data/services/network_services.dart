@@ -137,39 +137,3 @@ class NetworkClient {
   }
 }
 
-
-//=======================
-
-// class NetworkClient {
-//   static Future<NetworkResponse> getReques({required String url}) async {
-//
-//     try {
-//       Uri uri = Uri.parse(url);
-//       Response response = await get(uri);
-//
-//
-//       if (response.statusCode == 200) {
-//         final decodedJSON = jsonDecode(response.body);
-//         return NetworkResponse(
-//           isSuccess: true,
-//           data: decodedJSON,
-//           statusCode: response.statusCode,
-//         );
-//       } else {
-//         return NetworkResponse(
-//             isSuccess: false,
-//             errorMessage: 'Something went wrong',
-//             statusCode: response.statusCode
-//         );
-//       }
-//     }catch(e){
-//       return NetworkResponse(
-//           isSuccess: false,
-//           errorMessage: e.toString(),
-//           statusCode: -1,
-//       );
-//     }
-//
-//
-//   }
-// }

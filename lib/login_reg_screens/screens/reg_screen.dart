@@ -1,128 +1,79 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:social_mediaa/data/services/network_services.dart';
-import '../../data/utils/Urls.dart';
-import '../widgets/Textfromfield.dart';
-import '../widgets/containnerBox.dart';
 
-class RegistrationScreens extends StatefulWidget {
-  const RegistrationScreens({super.key});
+import '../controllers/regController.dart';
+// আপনার কন্ট্রোলার ইমপোর্ট করুন
+// GetView ব্যবহার করলে কন্ট্রোলার সরাসরি 'controller' নামে পাওয়া যায়
+class RegisterPage extends GetView<RegisterController> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  State<RegistrationScreens> createState() => _RegistrationScreensState();
-}
-
-class _RegistrationScreensState extends State<RegistrationScreens> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _fullnameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
+      appBar: AppBar(title: Text('Create Account')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 400),
-              textfromfield(
+              TextFormField(
                 controller: _usernameController,
-                icon: Icons.account_box,
-                text: 'username',
+                decoration: InputDecoration(labelText: 'Username'),
+                validator: (value) =>
+                value!.isEmpty ? 'Please enter username' : null,
               ),
-              SizedBox(height: 8),
-              textfromfield(
-                controller: _fullnameController,
-                icon: Icons.account_box,
-                text: 'full name',
-              ),
-              SizedBox(height: 8),
-              textfromfield(
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _emailController,
-                icon: Icons.email,
-                text: 'email address',
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) =>
+                value!.isEmpty ? 'Please enter email' : null,
               ),
-              SizedBox(height: 8),
-              textfromfield(
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _fullNameController,
+                decoration: InputDecoration(labelText: 'Full Name'),
+                validator: (value) =>
+                value!.isEmpty ? 'Please enter full name' : null,
+              ),
+              SizedBox(height: 12),
+              TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                icon: Icons.lock,
-                text: 'Password',
+                decoration: InputDecoration(labelText: 'Password'),
+                validator: (value) =>
+                value!.isEmpty ? 'Please enter password' : null,
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 30),
 
-              SizedBox(height: 16),
-              InkWell(
-                onTap: () {
-                  _onTapRegisterButton();
-                },
-                child: containnerBox(
-                  bgColors: Colors.black,
-                  text: "Registration",
-                  textColors: Colors.white,
-                ),
-              ),
-              SizedBox(height: 14),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 10.0,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Divider(thickness: 1, color: Colors.grey[400]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'or',
-                        style: TextStyle(color: Colors.grey[700], fontSize: 16),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(thickness: 1, color: Colors.grey[400]),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 14),
-              containnerBox(
-                bgColors: Colors.white,
-                text: 'Sign up by google',
-
-                textColors: Colors.black,
-              ),
-              SizedBox(height: 40),
-              Center(
-                child: RichText(
-                  text: TextSpan(
-                    text: "Don't have an account? ",
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                    children: [
-                      TextSpan(
-                        text: 'Sign In',
-                        style: TextStyle(
-                          color: Colors.indigoAccent,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                        // recognizer: TapGestureRecognizer()..onTap = () {
-                        //   Get.to(LoginScreen());
-                        // },
-                      ),
-                    ],
+              // Obx দিয়ে বাটনটিকে রি-বিল্ড করি (লোডিং স্টেট অনুযায়ী)
+              Obx(() {
+                return controller.isLoading.value
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 45),
                   ),
-                ),
+                  onPressed: _submitRegistration,
+                  child: Text('Register'),
+                );
+              }),
+
+              TextButton(
+                onPressed: () {
+                  Get.toNamed('/login'); // লগইন পেজে যাই
+                },
+                child: Text('Already have an account? Login'),
               ),
-              SizedBox(height: 40),
-              SizedBox(height: 40),
             ],
           ),
         ),
@@ -130,25 +81,14 @@ class _RegistrationScreensState extends State<RegistrationScreens> {
     );
   }
 
-  void _onTapRegisterButton() async {
-    Map<String, dynamic> requestBody = {
-      "username": _usernameController.text.trim(),
-      "email": _emailController.text.trim(),
-      "password": _passwordController.text.trim(),
-      "full_name": _fullnameController.text.trim(),
-    };
-    NetworkResponse responseNetwork = await NetworkClient.postRequest(
-      url: Urls.registerUrl,
-      body: requestBody,
-    );
-
-    if(responseNetwork.isSuccess){
-
-      print('Successss');
-    }else{
-      print('errorrr');
-
+  void _submitRegistration() {
+    if (_formKey.currentState!.validate()) {
+      controller.registerUser(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        fullName: _fullNameController.text,
+      );
     }
-
   }
 }
