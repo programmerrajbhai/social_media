@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+// --- আপনার পেজগুলো ইমপোর্ট করুন ---
 import 'package:social_mediaa/createpost/view/screens/create_post.dart';
 import 'package:social_mediaa/message/view/screens/message_screens.dart';
 import 'package:social_mediaa/notification/view/screens/notification_screens.dart';
 import 'package:social_mediaa/profile/view/screens/profilescreens.dart';
-import '../../../home/view/screens/home_screens.dart';
+import 'package:social_mediaa/home/view/screens/home_screens.dart';
 import '../../controller/bottom_nav_controller.dart';
 
 // Main Page with Bottom Navigation and Screens
@@ -13,10 +15,10 @@ class BaseScreens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomNavController = Get.put(BottomNavController());
+    // Get.find() ব্যবহার করুন, কারণ কন্ট্রোলার main.dart-এ লোড হয়েছে
+    final bottomNavController = Get.find<BottomNavController>();
 
     return Scaffold(
-
       body: Obx(() {
         return IndexedStack(
           index: bottomNavController.currentIndex.value,
@@ -61,25 +63,3 @@ class CustomBottomNavBar extends StatelessWidget {
     ));
   }
 }
-
-
-class AddScreen extends StatelessWidget {
-  const AddScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Add Screen', style: TextStyle(fontSize: 24)),
-    );
-  }
-}
-
-class NotifyScreen extends StatelessWidget {
-  const NotifyScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Notification Screen', style: TextStyle(fontSize: 24)),
-    );
-  }
-}
-

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:social_mediaa/login_reg_screens/controllers/regController.dart';
 
-import '../controllers/regController.dart';
-// আপনার কন্ট্রোলার ইমপোর্ট করুন
-// GetView ব্যবহার করলে কন্ট্রোলার সরাসরি 'controller' নামে পাওয়া যায়
 class RegisterPage extends GetView<RegisterController> {
+
+  // UI-তে কন্ট্রোলার রাখা ভালো প্র্যাকটিস নয়, তবে এটিও কাজ করবে
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
@@ -22,56 +22,37 @@ class RegisterPage extends GetView<RegisterController> {
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) =>
-                value!.isEmpty ? 'Please enter username' : null,
+                validator: (v) => v!.isEmpty ? 'Username required' : null,
               ),
-              SizedBox(height: 12),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) =>
-                value!.isEmpty ? 'Please enter email' : null,
+                validator: (v) => v!.isEmpty ? 'Email required' : null,
               ),
-              SizedBox(height: 12),
               TextFormField(
                 controller: _fullNameController,
                 decoration: InputDecoration(labelText: 'Full Name'),
-                validator: (value) =>
-                value!.isEmpty ? 'Please enter full name' : null,
+                validator: (v) => v!.isEmpty ? 'Full name required' : null,
               ),
-              SizedBox(height: 12),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
-                validator: (value) =>
-                value!.isEmpty ? 'Please enter password' : null,
+                validator: (v) => v!.isEmpty ? 'Password required' : null,
               ),
               SizedBox(height: 30),
-
-              // Obx দিয়ে বাটনটিকে রি-বিল্ড করি (লোডিং স্টেট অনুযায়ী)
-              Obx(() {
-                return controller.isLoading.value
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 45),
-                  ),
-                  onPressed: _submitRegistration,
-                  child: Text('Register'),
-                );
-              }),
-
+              Obx(() => controller.isLoading.value
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                onPressed: _submitRegistration,
+                child: Text('Register'),
+              )),
               TextButton(
-                onPressed: () {
-                  Get.toNamed('/login'); // লগইন পেজে যাই
-                },
+                onPressed: () => Get.offNamed('/login'),
                 child: Text('Already have an account? Login'),
               ),
             ],

@@ -1,29 +1,25 @@
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_mediaa/login_reg_screens/controllers/auth_service.dart';
 
 class SplashController extends GetxController {
+
+  final AuthService _authService = Get.find<AuthService>();
 
   @override
   void onInit() {
     super.onInit();
-    // কন্ট্রোলারটি চালু হওয়ামাত্রই টোকেন চেক করবে
     _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    // SharedPreferences থেকে টোকেনটি পড়ার চেষ্টা করি
-    final prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('auth_token');
-
-    // আমরা ১ সেকেন্ড অপেক্ষা করবো শুধু লোডিং দেখানোর জন্য (ঐচ্ছিক)
+    // SharedPreferences লোড হওয়ার জন্য ১ সেকেন্ড সময় দিই
     await Future.delayed(Duration(seconds: 1));
 
-    if (token != null && token.isNotEmpty) {
-      // টোকেন আছে, ইউজার লগইন করা আছে
-      Get.offAllNamed('/home'); // হোম পেজে পাঠাই
+    // AuthService থেকে চেক করি টোকেন আছে কি না
+    if (_authService.token.value.isNotEmpty) {
+      Get.offAllNamed('/home'); // লগইন করা থাকলে BaseScreens-এ যাই
     } else {
-      // টোকেন নেই, ইউজারকে লগইন করতে হবে
-      Get.offAllNamed('/login'); // লগইন পেজে পাঠাই
+      Get.offAllNamed('/login'); // লগইন করা না থাকলে লগইন পেজে
     }
   }
 }
